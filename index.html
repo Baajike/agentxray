@@ -7,6 +7,13 @@
 <meta name="description" content="See what any repo can make Claude Code, Cursor, Copilot, Codex or Gemini do — hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections. Runs 100% in your browser.">
 <meta property="og:title" content="AgentXray — what will this repo make your AI agent do?">
 <meta property="og:description" content="Hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections — decoded, graded and placed on an attack timeline. 100% in-browser.">
+<meta property="og:image" content="https://baajike.github.io/agentxray/og.png">
+<meta property="og:url" content="https://baajike.github.io/agentxray/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AgentXray — what will this repo make your AI agent do?">
+<meta name="twitter:description" content="Hooks, MCP servers, git-config traps and invisible prompt injections — decoded and graded before you open a repo. 100% in-browser.">
+<meta name="twitter:image" content="https://baajike.github.io/agentxray/og.png">
 <meta name="theme-color" content="#07090c">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2307090c'/><path d='M8 8l16 16M24 8L8 24' stroke='%2339ff9c' stroke-width='3.2' stroke-linecap='round'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +50,7 @@ nav .links a{color:var(--muted)} nav .links a:hover{color:var(--text)}
 .eyebrow{display:inline-flex;gap:8px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--glow);border:1px solid #1b3b2c;background:#0b1712;padding:6px 12px;border-radius:999px}
 .eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--glow);box-shadow:0 0 10px var(--glow);animation:pulse 1.6s infinite}
 @keyframes pulse{50%{opacity:.35}}
-h1{font-size:clamp(34px,6vw,64px);line-height:1.02;letter-spacing:-1.8px;margin:20px auto 16px;max-width:900px;font-weight:800}
+h1{font-size:clamp(29px,6vw,64px);overflow-wrap:break-word;line-height:1.02;letter-spacing:-1.8px;margin:20px auto 16px;max-width:900px;font-weight:800}
 h1 em{font-style:normal;color:var(--glow);text-shadow:0 0 30px rgba(57,255,156,.35)}
 .sub{color:var(--muted);font-size:clamp(16px,2vw,19px);max-width:720px;margin:0 auto;line-height:1.55}
 
@@ -387,7 +394,7 @@ async function scanGithub(input) {
     r.target = `github.com/${meta.name} @ ${meta.ref}`;
     r.note = `${meta.scannedFiles} of ${meta.totalFiles} files read (only the ones that can run code or reach an agent). Repos fetched from GitHub never include .git/config — drop a downloaded folder to check that too.`;
     render(r, { kind: 'gh', name: meta.name });
-    history.replaceState(null, '', `#gh=${meta.name}`);
+    lastHash = `gh=${meta.name}`; history.replaceState(null, '', `#gh=${meta.name}`);
   } catch (e) { showErr(e.message); }
   finally { $('#ghBtn').disabled = false; progDone(); }
 }
@@ -451,7 +458,7 @@ function finishLocal(out, label) {
 }
 
 // ── demo ──
-$('#demoBtn').onclick = () => { const r = scan(DEMO_FILES); r.target = `${DEMO_NAME}  ·  defanged demo — every URL points at example.invalid`; render(r, { kind: 'demo' }); history.replaceState(null, '', '#demo'); };
+$('#demoBtn').onclick = () => { const r = scan(DEMO_FILES); r.target = `${DEMO_NAME}  ·  defanged demo — every URL points at example.invalid`; render(r, { kind: 'demo' }); lastHash = 'demo'; history.replaceState(null, '', '#demo'); };
 
 // ── quick paste box → Invisible Ink ──
 $('#inkQuick').oninput = (e) => { $('#ink-in').value = e.target.value; ink(); };
@@ -554,10 +561,16 @@ function ink() {
     + inj.map(f => `<div class="hcard" style="border-color:#5a1a28"><div class="k" style="color:#ff8aa0"><span>prompt injection</span><span>${f.severity.toUpperCase()}</span></div><div class="msg" style="color:#ffd0d8">${esc(f.decoded || f.evidence)}</div></div>`).join('');
 }
 
-// ── deep links ──
-const h = decodeURIComponent(location.hash.slice(1));
-if (h === 'demo') $('#demoBtn').click();
-else if (h.startsWith('gh=')) { $('#ghInput').value = h.slice(3); scanGithub(h.slice(3)); }
+// ── deep links (on load AND when the hash changes in an open tab) ──
+let lastHash = null;
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h === lastHash) return; lastHash = h;
+  if (h === 'demo') $('#demoBtn').click();
+  else if (h.startsWith('gh=')) { $('#ghInput').value = h.slice(3); scanGithub(h.slice(3)); }
+}
+window.addEventListener('hashchange', route);
+route();
 </script>
 </body>
 </html>
