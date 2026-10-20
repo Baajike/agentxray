@@ -1,7 +1,7 @@
 {
   "name": "agentxray",
   "version": "0.2.0",
-  "description": "X-ray any repo before your AI coding agent touches it. Finds hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections \u2014 and shows when each one fires.",
+  "description": "X-ray any repo before your AI coding agent touches it. Finds hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections, and shows when each one fires.",
   "type": "module",
   "bin": {
     "agentxray": "bin/agentxray.js"
