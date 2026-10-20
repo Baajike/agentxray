@@ -202,7 +202,7 @@ footer a{color:var(--muted)}
 <body>
 <header class="wrap">
   <nav>
-    <a class="logo" href="./"><span class="x">✕</span> AgentXray</a>
+    <a class="logo" href="./"><span class="x"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span> AgentXray</a>
     <div class="links">
       <a href="#ink">Invisible Ink</a>
       <a href="#extension">Extension</a>
@@ -335,16 +335,16 @@ footer a{color:var(--muted)}
     <table class="vs-table">
       <thead><tr><th></th><th>AgentXray</th><th>MCP scanners</th><th>Repo-scan CLIs</th><th>SAST</th></tr></thead>
       <tbody>
-        <tr><td>Runs in the browser, nothing installed</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
+        <tr><td>Runs in the browser, nothing installed</td><td class="yes">●</td><td class="no">no</td><td class="no">no</td><td class="no">no</td></tr>
         <tr><td>Grade badge on every GitHub repo page</td><td class="yes">●</td><td class="no">no</td><td class="no">no</td><td class="no">no</td></tr>
-        <tr><td>Scans GitHub repos without cloning</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
-        <tr><td><b>Decodes</b> hidden messages (tags, variation selectors, zero-width)</td><td class="yes">●</td><td class="no">detect only</td><td class="no">detect only</td><td class="no">, </td></tr>
-        <tr><td>Attack timeline (open → session → git → read → install → run)</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
-        <tr><td>git-config traps (fsmonitor, filters, sshCommand…)</td><td class="yes">●</td><td class="no">, </td><td>some</td><td class="no">, </td></tr>
-        <tr><td>Hooks + MCP + VS Code + devcontainers + npm/yarn/pytest</td><td class="yes">●</td><td>MCP only</td><td>some</td><td class="no">, </td></tr>
-        <tr><td>Agent traffic redirection (<code>*_BASE_URL</code>, proxies)</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
-        <tr><td>A scanned repo can't silence its own findings</td><td class="yes">●</td><td class="no">, </td><td>some</td><td class="no">, </td></tr>
-        <tr><td>Grades real repos honestly (low false positives)</td><td class="yes">●</td><td class="no">noisy</td><td>, </td><td>, </td></tr>
+        <tr><td>Scans GitHub repos without cloning</td><td class="yes">●</td><td class="no">no</td><td class="no">no</td><td class="no">no</td></tr>
+        <tr><td><b>Decodes</b> hidden messages (tags, variation selectors, zero-width)</td><td class="yes">●</td><td class="no">detect only</td><td class="no">detect only</td><td class="no">no</td></tr>
+        <tr><td>Attack timeline (open → session → git → read → install → run)</td><td class="yes">●</td><td class="no">no</td><td class="no">no</td><td class="no">no</td></tr>
+        <tr><td>git-config traps (fsmonitor, filters, sshCommand…)</td><td class="yes">●</td><td class="no">no</td><td>some</td><td class="no">no</td></tr>
+        <tr><td>Hooks + MCP + VS Code + devcontainers + npm/yarn/pytest</td><td class="yes">●</td><td>MCP only</td><td>some</td><td class="no">no</td></tr>
+        <tr><td>Agent traffic redirection (<code>*_BASE_URL</code>, proxies)</td><td class="yes">●</td><td class="no">no</td><td class="no">no</td><td class="no">no</td></tr>
+        <tr><td>A scanned repo can't silence its own findings</td><td class="yes">●</td><td class="no">no</td><td>some</td><td class="no">no</td></tr>
+        <tr><td>Grades real repos honestly (low false positives)</td><td class="yes">●</td><td class="no">noisy</td><td class="no">unclear</td><td class="no">unclear</td></tr>
       </tbody>
     </table>
   </div>
