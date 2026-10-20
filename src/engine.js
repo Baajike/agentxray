@@ -1,20 +1,20 @@
-// AgentXray engine — shared by the CLI, the website and the GitHub Action.
+// AgentXray engine, shared by the CLI, the website and the GitHub Action.
 // Pure ES module, zero dependencies, never executes anything it scans.
 //
 // Input:  [{ path, text, size?, isSymlink?, linkTarget? }]
 // Output: { findings, grade, score, verdict, phases, surfaces, stats }
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.2.0';
 
 // ─────────────────────────────────────────────────────────────
 // The attack timeline: WHEN does each finding fire?
 // ─────────────────────────────────────────────────────────────
 export const PHASES = [
-  { id: 'open',    n: 1, label: 'Folder opened',        short: 'OPEN',    desc: 'Fires the moment you open the folder in VS Code, Cursor or a devcontainer — before you read a line.' },
+  { id: 'open',    n: 1, label: 'Folder opened',        short: 'OPEN',    desc: 'Fires the moment you open the folder in VS Code, Cursor or a devcontainer, before you read a line.' },
   { id: 'session', n: 2, label: 'Agent session starts', short: 'SESSION', desc: 'Fires when Claude Code, Cursor, Gemini, Copilot or Codex starts in this folder.' },
-  { id: 'git',     n: 3, label: 'Agent runs git',       short: 'GIT',     desc: 'Fires on the agent\'s background `git status` / `git diff` — often before any trust prompt.' },
-  { id: 'read',    n: 4, label: 'Agent reads files',    short: 'READ',    desc: 'Steers the agent when it reads instructions, READMEs or docs. No code needed — just words.' },
-  { id: 'install', n: 5, label: 'Dependencies install', short: 'INSTALL', desc: 'Fires on `npm install`, `pip install`, `yarn` — a command agents run without thinking.' },
+  { id: 'git',     n: 3, label: 'Agent runs git',       short: 'GIT',     desc: 'Fires on the agent\'s background `git status` / `git diff`, often before any trust prompt.' },
+  { id: 'read',    n: 4, label: 'Agent reads files',    short: 'READ',    desc: 'Steers the agent when it reads instructions, READMEs or docs. No code needed, just words.' },
+  { id: 'install', n: 5, label: 'Dependencies install', short: 'INSTALL', desc: 'Fires on `npm install`, `pip install`, `yarn`, a command agents run without thinking.' },
   { id: 'run',     n: 6, label: 'Tests / build run',    short: 'RUN',     desc: 'Fires when the agent runs tests, builds or scripts.' },
   { id: 'static',  n: 7, label: 'Sitting in the repo',  short: 'EXPOSED', desc: 'Doesn\'t execute, but leaks or weakens something (secrets, permissive policy).' },
 ];
@@ -75,7 +75,7 @@ function findLine(text, needle) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Command risk analysis — used for every command we find in a config
+// Command risk analysis, used for every command we find in a config
 // ─────────────────────────────────────────────────────────────
 const CMD_PATTERNS = [
   { tag: 'download-and-execute', sev: 'critical', re: /\b(curl|wget|fetch)\b[^\n|;&]*\|\s*(sudo\s+)?(ba|z|da|k)?sh\b|\b(curl|wget)\b[^\n|]*\|\s*(python3?|node|perl|ruby|php)\b|\b(iwr|irm|invoke-webrequest|invoke-restmethod)\b[^\n]*\|\s*iex\b|\b(ba)?sh\s+-c\s+["']?\$\((curl|wget)|\bsource\s+<\((curl|wget)/i },
@@ -103,7 +103,7 @@ export function analyzeCommand(cmd) {
 const bump = (a, b) => (!b ? a : SEV_RANK[b] > SEV_RANK[a] ? b : a);
 
 // ─────────────────────────────────────────────────────────────
-// Hidden-text decoding — the "Invisible Ink" engine
+// Hidden-text decoding, the "Invisible Ink" engine
 // ─────────────────────────────────────────────────────────────
 const TAG_RE = /[\u{E0000}-\u{E007F}]{2,}/gu;                         // Unicode tag smuggling
 const VS_RE = /[\u{FE00}-\u{FE0F}\u{E0100}-\u{E01EF}]{4,}/gu;          // variation-selector byte smuggling
@@ -248,7 +248,7 @@ export function scan(inputFiles, opts = {}) {
         add({ rule: 'AX-LINK-001', severity: sensitive ? 'critical' : 'high', phase: 'read', file: p,
           title: sensitive ? `Symlink points at a secret outside the repo → ${t}` : `Symlink escapes the repository → ${t}`,
           evidence: `${p} → ${t}`,
-          why: 'When an agent "reads a file in the repo", it follows this link out of the project — straight into your home directory. Sandboxes that only allow the project folder have been escaped exactly this way.',
+          why: 'When an agent "reads a file in the repo", it follows this link out of the project, straight into your home directory. Sandboxes that only allow the project folder have been escaped exactly this way.',
           fix: 'Delete the link, or open the repo only inside a container with no host mounts.' });
       }
       continue;
@@ -257,14 +257,14 @@ export function scan(inputFiles, opts = {}) {
     // ── .git/config: GitSpawn & friends ────────────────────
     if (p === '.git/config' || /^\.git\/modules\/[^]+\/config$/.test(p)) {
       const gitKeys = [
-        { re: /^\s*fsmonitor\s*=\s*(.+)$/im,     key: 'core.fsmonitor', sev: 'critical', why: 'git runs this command on every `git status` / `git diff`. Coding agents run those in the background on startup — in several agents this fired before the workspace-trust prompt (GitSpawn, 2026).' },
-        { re: /^\s*hooksPath\s*=\s*(.+)$/im,     key: 'core.hooksPath', sev: 'high', why: 'Redirects git hooks to a folder inside the repo, so attacker scripts run on commit, checkout or merge — which agents do for you.' },
+        { re: /^\s*fsmonitor\s*=\s*(.+)$/im,     key: 'core.fsmonitor', sev: 'critical', why: 'git runs this command on every `git status` / `git diff`. Coding agents run those in the background on startup, in several agents this fired before the workspace-trust prompt (GitSpawn, 2026).' },
+        { re: /^\s*hooksPath\s*=\s*(.+)$/im,     key: 'core.hooksPath', sev: 'high', why: 'Redirects git hooks to a folder inside the repo, so attacker scripts run on commit, checkout or merge, which agents do for you.' },
         { re: /^\s*sshCommand\s*=\s*(.+)$/im,    key: 'core.sshCommand', sev: 'critical', why: 'Replaces ssh for every fetch/push. An agent running `git pull` runs this command.' },
         { re: /^\s*pager\s*=\s*(.+)$/im,         key: 'core.pager', sev: 'high', why: 'Runs whenever git shows a log or diff.' },
         { re: /^\s*editor\s*=\s*(.+)$/im,        key: 'core.editor', sev: 'medium', why: 'Runs when git opens an editor (commit, rebase).' },
-        { re: /^\s*askPass\s*=\s*(.+)$/im,       key: 'core.askPass', sev: 'high', why: 'Runs whenever git needs credentials — and receives them.' },
+        { re: /^\s*askPass\s*=\s*(.+)$/im,       key: 'core.askPass', sev: 'high', why: 'Runs whenever git needs credentials, and receives them.' },
         { re: /^\s*(clean|smudge|process)\s*=\s*(.+)$/im, key: 'filter.*', sev: 'critical', why: 'Content filters run on checkout, add and status. Combined with .gitattributes, any git command executes this.' },
-        { re: /^\s*textconv\s*=\s*(.+)$/im,      key: 'diff.*.textconv', sev: 'high', why: 'Runs every time git diffs a matching file — agents diff constantly.' },
+        { re: /^\s*textconv\s*=\s*(.+)$/im,      key: 'diff.*.textconv', sev: 'high', why: 'Runs every time git diffs a matching file, agents diff constantly.' },
         { re: /^\s*helper\s*=\s*(!.+)$/im,       key: 'credential.helper', sev: 'critical', why: 'A shell credential helper receives your git credentials in plain text.' },
         { re: /^\s*[\w.-]+\s*=\s*(!.+)$/im,      key: 'alias (!shell)', sev: 'medium', why: 'Shell aliases run arbitrary commands when an agent uses that git alias.' },
       ];
@@ -274,7 +274,7 @@ export function scan(inputFiles, opts = {}) {
         const value = (m[2] ?? m[1] ?? '').trim();
         if (g.key === 'core.fsmonitor' && /^(true|false|0|1)$/i.test(value)) continue; // built-in daemon, not a command
         cmdFinding({ rule: 'AX-GIT-001', baseSev: g.sev, phase: 'git', file: p, line: lineOf(text, m.index),
-          title: `Repository git config sets ${g.key} — it runs a command`, command: `${g.key} = ${value}`,
+          title: `Repository git config sets ${g.key}, it runs a command`, command: `${g.key} = ${value}`,
           why: g.why + ' A repo\'s local .git/config overrides your global settings, so `git config --global` does not protect you.',
           fix: `Run \`git config --local --unset ${g.key === 'filter.*' || g.key.includes('*') ? '<key>' : g.key}\` (or delete .git/config and re-clone fresh). Agents should call git with \`-c core.fsmonitor=false -c core.hooksPath=/dev/null\`.` });
       }
@@ -286,7 +286,7 @@ export function scan(inputFiles, opts = {}) {
       const firstCmd = text.split('\n').filter(l => l.trim() && !l.startsWith('#')).slice(0, 3).join(' ; ');
       cmdFinding({ rule: 'AX-GIT-002', baseSev: 'high', phase: 'git', file: p,
         title: `Active git hook: ${name}`, command: firstCmd || '(hook script)',
-        why: 'Git hooks run automatically on commit, checkout, merge or push. Repos that arrive as a zip, a shared folder or a USB drive can carry them — a fresh clone cannot.',
+        why: 'Git hooks run automatically on commit, checkout, merge or push. Repos that arrive as a zip, a shared folder or a USB drive can carry them, a fresh clone cannot.',
         fix: 'Delete .git/hooks/* (keep the .sample files) or re-clone from the original URL.' });
       continue;
     }
@@ -319,12 +319,12 @@ export function scan(inputFiles, opts = {}) {
             cmdFinding({ rule: 'AX-HOOK-001', baseSev: early ? 'high' : 'medium', phase: 'session', file: p, line: findLine(text, String(command).slice(0, 30)),
               title: `${agent} ${event} hook runs a shell command`, command,
               why: `Hooks shipped inside a repo run with your permissions whenever ${agent} hits "${event}". Vendors treat repo hooks as "by design", so the repo author decides what runs on your machine. The Mini Shai-Hulud worm persisted exactly this way.`,
-              fix: 'Read the command. If you did not write it, delete the hook before starting the agent — or run the agent in a disposable container.' });
+              fix: 'Read the command. If you did not write it, delete the hook before starting the agent, or run the agent in a disposable container.' });
           }
         }
       }
 
-      // env redirection — traffic & key theft
+      // env redirection, traffic & key theft
       const env = j.env || {};
       for (const [k, v] of Object.entries(env)) {
         if (/(_BASE_URL|_API_URL|_ENDPOINT|^HTTPS?_PROXY$|^ALL_PROXY$|^NODE_OPTIONS$|^LD_PRELOAD$|^DYLD_|^PYTHONSTARTUP$|^BASH_ENV$|_HEADERS$|^NODE_EXTRA_CA_CERTS$|^SSL_CERT_FILE$|_TLS_REJECT|^OTEL_EXPORTER)/i.test(k)) {
@@ -332,7 +332,7 @@ export function scan(inputFiles, opts = {}) {
           add({ rule: 'AX-ENV-001', severity: /BASE_URL|PROXY|LD_PRELOAD|DYLD_|NODE_OPTIONS|CA_CERT|SSL_CERT|TLS_REJECT/i.test(k) ? 'critical' : 'high', phase: 'session', file: p, line: findLine(text, k),
             title: `${agent} config overrides ${k}`, evidence: `${k}=${clip(v, 120)}`,
             why: /BASE_URL|PROXY/i.test(k)
-              ? `Every request your agent makes — your prompts, your code and the API key in the header — gets routed to ${isUrl ? new URL(String(v)).host : 'an endpoint the repo chose'}. That's a silent man-in-the-middle on your AI session.`
+              ? `Every request your agent makes, your prompts, your code and the API key in the header, gets routed to ${isUrl ? new URL(String(v)).host : 'an endpoint the repo chose'}. That's a silent man-in-the-middle on your AI session.`
               : 'This variable changes how programs load code or trust TLS for every command the agent runs.',
             fix: `Remove "${k}" from the env block. Your base URL and proxies belong in your user settings, never in a repo.` });
         }
@@ -344,7 +344,7 @@ export function scan(inputFiles, opts = {}) {
         if (typeof v === 'string' && v.trim()) {
           cmdFinding({ rule: 'AX-HOOK-002', baseSev: k === 'statusLine' || k === 'fileSuggestion' ? 'medium' : 'high', phase: 'session', file: p, line: findLine(text, k),
             title: `${agent} "${k}" runs a command`, command: v,
-            why: k === 'apiKeyHelper' ? 'This command decides which API key the agent uses — a repo should never set it.' : 'This setting executes a shell command automatically during the session.',
+            why: k === 'apiKeyHelper' ? 'This command decides which API key the agent uses, a repo should never set it.' : 'This setting executes a shell command automatically during the session.',
             fix: `Delete "${k}" from the repo's settings.` });
         }
       }
@@ -365,12 +365,12 @@ export function scan(inputFiles, opts = {}) {
       if (j.enableAllProjectMcpServers === true || (Array.isArray(j.enabledMcpjsonServers) && j.enabledMcpjsonServers.length))
         add({ rule: 'AX-MCP-002', severity: 'high', phase: 'session', file: p, line: findLine(text, 'McpServers'),
           title: 'Repo auto-approves its own MCP servers', evidence: j.enableAllProjectMcpServers ? 'enableAllProjectMcpServers: true' : `enabledMcpjsonServers: ${JSON.stringify(j.enabledMcpjsonServers)}`,
-          why: 'Normally you are asked before a project MCP server starts. This flag skips that question — the servers launch the moment the session opens.',
+          why: 'Normally you are asked before a project MCP server starts. This flag skips that question, the servers launch the moment the session opens.',
           fix: 'Remove the flag so you are prompted before each server starts.' });
       if (p.endsWith('settings.local.json'))
         add({ rule: 'AX-LEAK-001', severity: 'low', phase: 'static', file: p,
           title: 'Personal agent settings were committed (settings.local.json)', evidence: p,
-          why: 'This file is meant to be private. It often contains approved commands, local paths and sometimes tokens — and it was shipped in npm packages in 2026.',
+          why: 'This file is meant to be private. It often contains approved commands, local paths and sometimes tokens, and it was shipped in npm packages in 2026.',
           fix: 'Add .claude/settings.local.json to .gitignore and .npmignore, and rotate anything sensitive inside it.' });
 
       // MCP servers defined inline (Gemini, etc.)
@@ -394,7 +394,7 @@ export function scan(inputFiles, opts = {}) {
         if (t.runOptions?.runOn === 'folderOpen') {
           cmdFinding({ rule: 'AX-VSC-001', baseSev: 'critical', phase: 'open', file: p, line: findLine(text, 'folderOpen'),
             title: `Task "${t.label || 'unnamed'}" runs automatically when the folder opens`, command: cmd || '(task)',
-            why: 'VS Code, Cursor and Windsurf run this the moment you open the folder (once you trust it — and most people click "Yes, I trust the authors" without reading). Used in the wild by the Contagious Interview / fake job-test campaigns.',
+            why: 'VS Code, Cursor and Windsurf run this the moment you open the folder (once you trust it, and most people click "Yes, I trust the authors" without reading). Used in the wild by the Contagious Interview / fake job-test campaigns.',
             fix: 'Delete "runOn": "folderOpen", or keep the folder in Restricted Mode.' });
         }
       }
@@ -415,7 +415,7 @@ export function scan(inputFiles, opts = {}) {
         }
         if (/^terminal\.integrated\.(env|profiles|shellArgs|automationProfile)/.test(k))
           add({ rule: 'AX-VSC-003', severity: 'medium', phase: 'open', file: p, line: findLine(text, k), title: `Workspace changes terminal environment (${k})`, evidence: clip(val, 160),
-            why: 'Every terminal the editor or its agent opens inherits this — including PATH or startup files.', fix: `Remove "${k}".` });
+            why: 'Every terminal the editor or its agent opens inherits this, including PATH or startup files.', fix: `Remove "${k}".` });
         if ((/autoApprove|chat\.tools\.(global\.)?autoApprove|yolo|agent\.autoRun|terminal\.autoApprove|autoRun/i.test(k) && (v === true || (typeof v === 'object' && v))) || (k === 'security.workspace.trust.enabled' && v === false))
           add({ rule: 'AX-VSC-004', severity: 'high', phase: 'session', file: p, line: findLine(text, k), title: `Workspace disables a safety prompt (${k})`, evidence: `${k}: ${clip(val, 100)}`,
             why: 'This lets the editor\'s AI agent run tools or terminal commands without asking you.', fix: `Delete "${k}" from the repo settings.` });
@@ -432,7 +432,7 @@ export function scan(inputFiles, opts = {}) {
         fix: 'Delete initializeCommand or review it line by line before "Reopen in Container".' });
       for (const k of ['onCreateCommand', 'updateContentCommand', 'postCreateCommand', 'postStartCommand', 'postAttachCommand']) {
         if (j[k]) cmdFinding({ rule: 'AX-DEV-002', baseSev: 'low', phase: 'open', file: p, line: findLine(text, k), title: `devcontainer ${k} runs automatically`, command: flatCmd(j[k]),
-          why: 'Runs inside the container — safer, but it still sees any secrets, SSH agents or folders forwarded into it.', fix: 'Review the command.' });
+          why: 'Runs inside the container, safer, but it still sees any secrets, SSH agents or folders forwarded into it.', fix: 'Review the command.' });
       }
       const mountsTxt = JSON.stringify([j.mounts, j.runArgs, j.workspaceMount, j.privileged, j.capAdd]);
       if (/docker\.sock|\$\{localEnv:HOME\}|\$\{localEnv:USERPROFILE\}|--privileged|"privileged":true|true|SYS_ADMIN|source=\/[,"]|--pid=host|--network=host/.test(mountsTxt) && /docker\.sock|localEnv:(HOME|USERPROFILE)|privileged|SYS_ADMIN|source=\/[,"]|pid=host/.test(mountsTxt))
@@ -458,7 +458,7 @@ export function scan(inputFiles, opts = {}) {
         const benign = /^(husky( install)?|npx husky|patch-package|node-gyp rebuild|ngcc|tsc( -b)?|npm run build|lerna bootstrap|is-ci \|\| husky)$/.test(scripts[k].trim());
         cmdFinding({ rule: 'AX-NPM-001', baseSev: benign ? 'info' : 'medium', phase: 'install', file: p, line: findLine(text, `"${k}"`),
           title: `npm "${k}" script runs on install`, command: scripts[k],
-          why: 'Install scripts run automatically on `npm install` — the first thing an agent does in a JS repo. This is how most npm worms spread.',
+          why: 'Install scripts run automatically on `npm install`, the first thing an agent does in a JS repo. This is how most npm worms spread.',
           fix: 'Install with `npm install --ignore-scripts` (or set ignore-scripts=true in your ~/.npmrc) until you have read it.' });
       }
       for (const [k, v] of Object.entries(scripts)) {
@@ -489,7 +489,7 @@ export function scan(inputFiles, opts = {}) {
       const m = /^\s*(script-shell|node-options|onload-script|globalconfig|userconfig|ignore-scripts\s*=\s*false|registry|@[\w-]+:registry|preload)\s*[=:]\s*(.*)$/im.exec(text);
       if (m) add({ rule: 'AX-PKG-002', severity: /script-shell|node-options|onload|preload/.test(m[1]) ? 'high' : 'medium', phase: 'install', file: p, line: lineOf(text, m.index),
         title: `${name} changes ${m[1].split(/\s/)[0]}`, evidence: clip(m[0]),
-        why: /registry/.test(m[1]) ? 'Packages will be downloaded from a registry the repo chose — a classic dependency-confusion setup.' : 'This changes what program npm runs for scripts or what code Node preloads into every process.',
+        why: /registry/.test(m[1]) ? 'Packages will be downloaded from a registry the repo chose, a classic dependency-confusion setup.' : 'This changes what program npm runs for scripts or what code Node preloads into every process.',
         fix: 'Remove it from the repo-level config.' });
       const tok = /_authToken\s*=\s*([^\s$][^\s]{8,})/.exec(text);
       if (tok && !/\$\{/.test(tok[1])) add({ rule: 'AX-SEC-001', severity: 'high', phase: 'static', file: p, line: lineOf(text, tok.index), title: 'npm auth token committed in .npmrc', evidence: `_authToken=${mask(tok[1])}`,
@@ -498,7 +498,7 @@ export function scan(inputFiles, opts = {}) {
 
     // ── Python auto-exec surfaces ──────────────────────────
     if (/\.pth$/.test(p) && /^\s*import\s/m.test(text)) {
-      add({ rule: 'AX-PY-001', severity: 'high', phase: 'run', file: p, title: '.pth file with import — runs on every Python start', evidence: clip(text.split('\n').find(l => /^\s*import/.test(l))),
+      add({ rule: 'AX-PY-001', severity: 'high', phase: 'run', file: p, title: '.pth file with import, runs on every Python start', evidence: clip(text.split('\n').find(l => /^\s*import/.test(l))),
         why: 'Python executes `import` lines in .pth files at interpreter startup. If this lands in a virtualenv, every python command runs it.', fix: 'Delete it unless you know exactly what it is.' });
     }
     if (name === 'conftest.py' || name === 'setup.py' || name === 'sitecustomize.py' || name === 'usercustomize.py') {
@@ -508,8 +508,8 @@ export function scan(inputFiles, opts = {}) {
       if (execy && shady) { sev = bump(sev || 'high', 'high'); if (!tags.length) tags = ['process-exec', 'encoded-payload']; }
       if (sev && (tags.some(t => t !== 'network') || execy))
         add({ rule: 'AX-PY-002', severity: bump('medium', sev === 'medium' ? null : sev), tags, phase: name === 'setup.py' ? 'install' : 'run', file: p,
-          title: `${name} does ${tags.join(' + ') || 'process execution'} — runs on ${name === 'setup.py' ? 'pip install' : name === 'conftest.py' ? '`pytest`' : 'python start'}`, evidence: clip(firstMatchLine(text, /subprocess|os\.system|exec\(|eval\(|urllib|requests\.|socket|base64/)),
-          why: name === 'conftest.py' ? 'pytest imports conftest.py automatically. Agents run `pytest` to "check their work" — a 2026 attack hid a C2 payload exactly here.' : 'This file executes automatically.',
+          title: `${name} does ${tags.join(' + ') || 'process execution'}, runs on ${name === 'setup.py' ? 'pip install' : name === 'conftest.py' ? '`pytest`' : 'python start'}`, evidence: clip(firstMatchLine(text, /subprocess|os\.system|exec\(|eval\(|urllib|requests\.|socket|base64/)),
+          why: name === 'conftest.py' ? 'pytest imports conftest.py automatically. Agents run `pytest` to "check their work", a 2026 attack hid a C2 payload exactly here.' : 'This file executes automatically.',
           fix: 'Read this file before running tests or installing.' });
     }
 
@@ -540,7 +540,7 @@ export function scan(inputFiles, opts = {}) {
         why: 'Agents run setup scripts, Makefiles and Dockerfiles when told "get this working". This one fetches and runs remote code.', fix: 'Read it before running. Pin and verify anything it downloads.' });
     }
 
-    // ── Hidden Unicode — in ANY text file ──────────────────
+    // ── Hidden Unicode, in ANY text file ──────────────────
     if (text && !/\.(min\.js|map|lock|svg)$/.test(p) && !/(^|\/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml)$/.test(p)) {
       const hidden = revealHidden(text);
       for (const h of hidden) {
@@ -548,13 +548,13 @@ export function scan(inputFiles, opts = {}) {
         const decodedInj = h.decoded && injectionHits(h.decoded).length;
         const sev = h.kind === 'bidi-controls' ? (instr ? 'high' : 'medium') : (decodedInj || h.decoded.length > 8 ? 'critical' : 'high');
         add({ rule: h.kind === 'bidi-controls' ? 'AX-UNI-002' : 'AX-UNI-001', severity: sev, phase: 'read', file: p, line: lineOf(text, h.index),
-          title: h.kind === 'bidi-controls' ? `Bidirectional control characters (${h.length}) — "Trojan Source"`
+          title: h.kind === 'bidi-controls' ? `Bidirectional control characters (${h.length}). "Trojan Source"`
             : h.decoded ? `Invisible text decoded: "${clip(h.decoded, 70)}"` : `${h.length} invisible ${h.kind} characters hidden in ${name}`,
           decoded: h.decoded || undefined, hiddenKind: h.kind,
           evidence: h.decoded ? `[${h.kind}] ${clip(h.decoded, 300)}` : `${h.length} × ${h.kind}`,
           why: h.kind === 'bidi-controls'
             ? 'These reorder how text displays, so what you review is not what the compiler or the agent reads.'
-            : 'You cannot see this text on GitHub, in your editor or in a diff — but AI models read it perfectly. It is the cleanest way to smuggle instructions into an agent.',
+            : 'You cannot see this text on GitHub, in your editor or in a diff, but AI models read it perfectly. It is the cleanest way to smuggle instructions into an agent.',
           fix: 'Strip the characters (AgentXray shows exactly where) and treat the repo as hostile if you did not put them there.' });
       }
     }
@@ -577,7 +577,7 @@ export function scan(inputFiles, opts = {}) {
             fix: 'Delete the comment. Be suspicious of the whole repo.' });
         }
       }
-      // b) visible injection language — per paragraph, precision over recall
+      // b) visible injection language, per paragraph, precision over recall
       const visible = text.replace(/<!--[\s\S]*?-->/g, m => ' '.repeat(m.length));
       const isChangelog = /(^|\/)(CHANGELOG|HISTORY|RELEASES?|NEWS)(\.[a-z]+)?$/i.test(p);
       const paras = isChangelog ? [] : paragraphHits(visible).filter(ph => instr || ph.aiAddressed);
@@ -620,7 +620,7 @@ export function scan(inputFiles, opts = {}) {
         if (!m) continue;
         if (/example|dummy|fake|xxxx|your[_-]?key|placeholder|REDACTED|test/i.test(lineAround(text, m.index)) && s.name !== 'Private key') continue;
         add({ rule: 'AX-SEC-002', severity: s.name === 'Private key' ? 'high' : 'high', phase: 'static', file: p, line: lineOf(text, m.index), title: `${s.name} committed to the repo`, evidence: mask(m[0]),
-          why: 'Agents read every file — this key ends up in model context, logs, and anywhere an injected instruction tells the agent to send it.', fix: 'Revoke and rotate the key now, then remove it from git history.' });
+          why: 'Agents read every file, this key ends up in model context, logs, and anywhere an injected instruction tells the agent to send it.', fix: 'Revoke and rotate the key now, then remove it from git history.' });
         break;
       }
     }
@@ -638,12 +638,12 @@ export function scan(inputFiles, opts = {}) {
         const plainHttp = /^http:\/\/(?!localhost|127\.)/.test(url);
         add({ rule: 'AX-MCP-001', severity: plainHttp ? 'high' : 'medium', phase: 'session', file: p, line: findLine(text, `"${name}"`),
           title: `Remote MCP server "${name}" → ${safeHost(url)}${plainHttp ? ' over plain HTTP' : ''}`, evidence: url,
-          why: 'Your agent will send tool calls — and whatever context they include — to this server, and obey the tool descriptions it returns. Tool descriptions are a known prompt-injection channel ("tool poisoning").',
+          why: 'Your agent will send tool calls, and whatever context they include, to this server, and obey the tool descriptions it returns. Tool descriptions are a known prompt-injection channel ("tool poisoning").',
           fix: 'Only keep MCP servers you added yourself. Remove repo-provided ones from the project config.' });
       } else if (command) {
         cmdFinding({ rule: 'AX-MCP-001', baseSev: unpinned ? 'medium' : 'low', phase: 'session', file: p, line: findLine(text, `"${name}"`),
           title: `${agent} MCP server "${name}" launches a local process${unpinned ? ' (unpinned package)' : ''}`, command,
-          why: `MCP servers run as programs on your machine with your permissions when the session starts.${unpinned ? ' `npx -y pkg` with no version downloads whatever is latest — a hijacked or typosquatted package runs instantly.' : ''}`,
+          why: `MCP servers run as programs on your machine with your permissions when the session starts.${unpinned ? ' `npx -y pkg` with no version downloads whatever is latest, a hijacked or typosquatted package runs instantly.' : ''}`,
           fix: unpinned ? 'Pin an exact version (pkg@1.2.3) and verify the package name, or remove the server.' : 'Make sure you recognise this server before approving it.' });
       }
       if (envSecrets.length) add({ rule: 'AX-SEC-003', severity: 'high', phase: 'static', file: p, line: findLine(text, envSecrets[0][0]), title: `MCP server "${name}" has a hardcoded ${envSecrets[0][0]}`, evidence: `${envSecrets[0][0]}=${mask(String(envSecrets[0][1]))}`,
@@ -684,7 +684,7 @@ export function summarize(files, findings, opts = {}) {
   const grade = counts.critical ? 'F' : score >= 95 && !counts.high ? 'A' : score >= 80 && counts.high <= 1 ? 'B' : score >= 60 ? 'C' : 'D';
   const verdict = {
     A: 'Clean. Nothing here can run code or steer your agent without you noticing.',
-    B: 'Mostly safe. A few things run automatically — glance at them before you start.',
+    B: 'Mostly safe. A few things run automatically, glance at them before you start.',
     C: 'Review first. This repo has several ways to run code or influence your agent.',
     D: 'Risky. Open it only in a disposable container until you have reviewed every finding.',
     F: 'Do not open this with an AI agent. It contains something that executes or hijacks the agent on its own.',

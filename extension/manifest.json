@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "AgentXray for GitHub",
+  "version": "0.2.0",
+  "description": "An A to F grade on every GitHub repo: what can this repo make your AI coding agent do before you clone it?",
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lib/*.js"
+      ],
+      "matches": [
+        "https://github.com/*"
+      ]
+    }
+  ],
+  "options_page": "options.html",
+  "action": {
+    "default_title": "AgentXray",
+    "default_popup": "options.html"
+  }
+}

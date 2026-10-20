@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AgentXray — X-ray a repo before your AI agent touches it</title>
-<meta name="description" content="See what any repo can make Claude Code, Cursor, Copilot, Codex or Gemini do — hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections. Runs 100% in your browser.">
-<meta property="og:title" content="AgentXray — what will this repo make your AI agent do?">
-<meta property="og:description" content="Hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections — decoded, graded and placed on an attack timeline. 100% in-browser.">
+<title>AgentXray: X-ray a repo before your AI agent touches it</title>
+<meta name="description" content="See what any repo can make Claude Code, Cursor, Copilot, Codex or Gemini do, hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections. Runs 100% in your browser.">
+<meta property="og:title" content="AgentXray: what will this repo make your AI agent do?">
+<meta property="og:description" content="Hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections. Decoded, graded and placed on an attack timeline. 100% in-browser.">
 <meta property="og:image" content="https://baajike.github.io/agentxray/og.png">
 <meta property="og:url" content="https://baajike.github.io/agentxray/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AgentXray — what will this repo make your AI agent do?">
-<meta name="twitter:description" content="Hooks, MCP servers, git-config traps and invisible prompt injections — decoded and graded before you open a repo. 100% in-browser.">
+<meta name="twitter:title" content="AgentXray: what will this repo make your AI agent do?">
+<meta name="twitter:description" content="Hooks, MCP servers, git-config traps and invisible prompt injections, decoded and graded before you open a repo. 100% in-browser.">
 <meta name="twitter:image" content="https://baajike.github.io/agentxray/og.png">
 <meta name="theme-color" content="#07090c">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2307090c'/><path d='M8 8l16 16M24 8L8 24' stroke='%2339ff9c' stroke-width='3.2' stroke-linecap='round'/></svg>">
@@ -76,7 +76,7 @@ textarea.input{min-height:150px;resize:vertical;width:100%;line-height:1.5}
 .demo-cta button{background:none;border:1px solid #4a1b26;color:#ff8aa0;border-radius:9px;padding:9px 14px;font-family:var(--mono);font-size:13px;cursor:pointer}
 .demo-cta button:hover{background:#1a0a0f}
 .trust{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:18px;color:var(--faint);font-family:var(--mono);font-size:12px}
-.trust span::before{content:"✓ ";color:var(--glowd)}
+.trust span+span::before{content:"·";margin-right:18px;color:var(--faint)}
 
 /* progress */
 .progress{display:none;margin:26px auto 0;max-width:860px;font-family:var(--mono);font-size:13px;color:var(--muted)}
@@ -185,6 +185,7 @@ footer a{color:var(--muted)}
 .toast.on{opacity:1;transform:translateX(-50%)}
 
 @media (max-width:760px){
+  #extension{grid-template-columns:1fr!important}
   .report-head{grid-template-columns:1fr;text-align:left}
   .grade{width:92px;height:92px;font-size:52px}
   .actions{flex-direction:row;flex-wrap:wrap}
@@ -204,9 +205,10 @@ footer a{color:var(--muted)}
     <a class="logo" href="./"><span class="x">✕</span> AgentXray</a>
     <div class="links">
       <a href="#ink">Invisible Ink</a>
+      <a href="#extension">Extension</a>
       <a href="#everywhere">CLI &amp; CI</a>
       <a href="#compare">Why AgentXray</a>
-      <a class="gh" id="ghLink" href="https://github.com/Baajike/agentxray" target="_blank" rel="noopener">★ GitHub</a>
+      <a class="gh" id="ghLink" href="https://github.com/Baajike/agentxray" target="_blank" rel="noopener">GitHub</a>
     </div>
   </nav>
 </header>
@@ -214,8 +216,8 @@ footer a{color:var(--muted)}
 <main>
 <section class="wrap hero">
   <span class="eyebrow"><i></i> GitSpawn · Shai-Hulud · tool poisoning · hook hijacking</span>
-  <h1>See what a repo will make your <em>AI agent</em> do — before you open it.</h1>
-  <p class="sub">Hooks, MCP servers, auto-run tasks, git-config traps and <b>invisible</b> prompt injections — decoded, graded, and placed on the exact moment they fire. For Claude Code, Cursor, Copilot, Codex, Gemini and Windsurf.</p>
+  <h1>See what a repo will make your <em>AI agent</em> do, before you open it.</h1>
+  <p class="sub">Hooks, MCP servers, auto-run tasks, git-config traps and <b>invisible</b> prompt injections. Decoded, graded, and placed on the exact moment they fire. For Claude Code, Cursor, Copilot, Codex, Gemini and Windsurf.</p>
 
   <div class="scanner" id="scanner">
     <div class="tabs" role="tablist">
@@ -233,7 +235,7 @@ footer a{color:var(--muted)}
     <div class="pane" id="p-drop">
       <div class="drop" id="drop">
         <strong>Drop a project folder or a .zip here</strong>
-        Includes <code>.git/config</code> and <code>.git/hooks</code> — the stuff GitHub can't show you.<br>
+        Includes <code>.git/config</code> and <code>.git/hooks</code>, the stuff GitHub can't show you.<br>
         <span style="font-size:13px">or <u>click to choose a folder</u> · files never leave your browser</span>
       </div>
       <input type="file" id="dirInput" webkitdirectory directory multiple hidden>
@@ -246,7 +248,7 @@ footer a{color:var(--muted)}
     </div>
     <div class="demo-cta">
       <span>Never seen an attack like this? Scan our defanged booby-trapped repo.</span>
-      <button id="demoBtn">☠ Run the demo</button>
+      <button id="demoBtn">Run the demo</button>
     </div>
   </div>
   <div class="trust"><span>100% client-side</span><span>open source</span><span>zero dependencies</span><span>45+ checks</span><span>SARIF for CI</span></div>
@@ -264,16 +266,16 @@ footer a{color:var(--muted)}
       <div class="chips" id="chips"></div>
     </div>
     <div class="actions">
-      <button id="shareBtn">🔗 Copy share link</button>
-      <button id="badgeBtn">🏷 Copy README badge</button>
-      <button id="mdBtn">📋 Copy report (Markdown)</button>
-      <button id="sarifBtn">⬇ Download SARIF</button>
+      <button id="shareBtn">Copy share link</button>
+      <button id="badgeBtn">Copy README badge</button>
+      <button id="mdBtn">Copy report (Markdown)</button>
+      <button id="sarifBtn">Download SARIF</button>
     </div>
   </div>
 
   <div id="hiddenWrap"><h2 class="sec">◉ Hidden messages decoded</h2><div class="hidden-grid" id="hidden"></div></div>
 
-  <h2 class="sec">When it fires — the attack timeline</h2>
+  <h2 class="sec">When it fires: the attack timeline</h2>
   <div class="timeline" id="timeline"></div>
   <div class="phase-desc" id="phaseDesc">Click a stage to filter. Everything left of "Agent reads files" runs <b>without the agent deciding anything</b>.</div>
 
@@ -285,10 +287,10 @@ footer a{color:var(--muted)}
 </section>
 
 <section class="wrap" id="ink" style="padding-top:60px">
-  <h2 class="sec">Invisible Ink — the hidden-text decoder</h2>
+  <h2 class="sec">Invisible Ink: the hidden-text decoder</h2>
   <div class="card">
     <h3>Your eyes see one thing. The model reads another.</h3>
-    <p>Unicode tag characters, variation-selector "emoji smuggling", zero-width binary and bidi overrides render as <i>nothing</i> on GitHub and in your editor — but LLMs read them perfectly. Paste anything below.</p>
+    <p>Unicode tag characters, variation-selector "emoji smuggling", zero-width binary and bidi overrides render as <i>nothing</i> on GitHub and in your editor, but LLMs read them perfectly. Paste anything below.</p>
     <textarea class="input" id="ink-in" style="margin-top:14px" placeholder="Paste text here…"></textarea>
     <div class="row" style="margin-top:10px">
       <button class="btn ghost" id="inkSample">Load a poisoned sample</button>
@@ -302,6 +304,11 @@ footer a{color:var(--muted)}
 
 <section class="wrap" id="everywhere" style="padding-top:60px">
   <h2 class="sec">Use it everywhere</h2>
+  <div class="card" style="margin-bottom:14px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center" id="extension">
+    <div><h3>Browser extension: a grade on every GitHub repo</h3><p>An A to F badge appears next to the repo name on GitHub. Hover for the top findings, click for the full report. You see the risk before you click Clone. Works in Chrome, Edge, Brave and Arc.</p>
+    <p style="margin-top:10px;font-family:var(--mono);font-size:12.5px">Install: unzip, open <b>chrome://extensions</b>, turn on Developer mode, click <b>Load unpacked</b>, choose the folder.</p></div>
+    <a class="btn" href="agentxray-extension.zip" download style="text-decoration:none;white-space:nowrap">Download extension</a>
+  </div>
   <div class="grid3">
     <div class="card"><h3>Terminal</h3><p>Zero dependencies. Scan a folder, or a GitHub repo <b>without cloning it</b>.</p>
 <pre class="code"><span class="c"># scan the folder you're in</span>
@@ -328,15 +335,16 @@ footer a{color:var(--muted)}
     <table class="vs-table">
       <thead><tr><th></th><th>AgentXray</th><th>MCP scanners</th><th>Repo-scan CLIs</th><th>SAST</th></tr></thead>
       <tbody>
-        <tr><td>Runs in the browser, nothing installed</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
-        <tr><td>Scans GitHub repos without cloning</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
-        <tr><td><b>Decodes</b> hidden messages (tags, variation selectors, zero-width)</td><td class="yes">●</td><td class="no">detect only</td><td class="no">detect only</td><td class="no">—</td></tr>
-        <tr><td>Attack timeline (open → session → git → read → install → run)</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
-        <tr><td>git-config traps (fsmonitor, filters, sshCommand…)</td><td class="yes">●</td><td class="no">—</td><td>some</td><td class="no">—</td></tr>
-        <tr><td>Hooks + MCP + VS Code + devcontainers + npm/yarn/pytest</td><td class="yes">●</td><td>MCP only</td><td>some</td><td class="no">—</td></tr>
-        <tr><td>Agent traffic redirection (<code>*_BASE_URL</code>, proxies)</td><td class="yes">●</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
-        <tr><td>A scanned repo can't silence its own findings</td><td class="yes">●</td><td class="no">—</td><td>some</td><td class="no">—</td></tr>
-        <tr><td>Grades real repos honestly (low false positives)</td><td class="yes">●</td><td class="no">noisy</td><td>—</td><td>—</td></tr>
+        <tr><td>Runs in the browser, nothing installed</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
+        <tr><td>Grade badge on every GitHub repo page</td><td class="yes">●</td><td class="no">no</td><td class="no">no</td><td class="no">no</td></tr>
+        <tr><td>Scans GitHub repos without cloning</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
+        <tr><td><b>Decodes</b> hidden messages (tags, variation selectors, zero-width)</td><td class="yes">●</td><td class="no">detect only</td><td class="no">detect only</td><td class="no">, </td></tr>
+        <tr><td>Attack timeline (open → session → git → read → install → run)</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
+        <tr><td>git-config traps (fsmonitor, filters, sshCommand…)</td><td class="yes">●</td><td class="no">, </td><td>some</td><td class="no">, </td></tr>
+        <tr><td>Hooks + MCP + VS Code + devcontainers + npm/yarn/pytest</td><td class="yes">●</td><td>MCP only</td><td>some</td><td class="no">, </td></tr>
+        <tr><td>Agent traffic redirection (<code>*_BASE_URL</code>, proxies)</td><td class="yes">●</td><td class="no">, </td><td class="no">, </td><td class="no">, </td></tr>
+        <tr><td>A scanned repo can't silence its own findings</td><td class="yes">●</td><td class="no">, </td><td>some</td><td class="no">, </td></tr>
+        <tr><td>Grades real repos honestly (low false positives)</td><td class="yes">●</td><td class="no">noisy</td><td>, </td><td>, </td></tr>
       </tbody>
     </table>
   </div>
@@ -345,7 +353,7 @@ footer a{color:var(--muted)}
 
 <footer class="wrap">
   AgentXray is open source (MIT). Built by <a href="https://github.com/Baajike" id="authorLink">Immanuella Baajike</a>.<br>
-  It's a triage tool, not a guarantee — when in doubt, open untrusted code in a throwaway container.
+  It's a triage tool, not a guarantee, when in doubt, open untrusted code in a throwaway container.
 </footer>
 <div class="toast" id="toast"></div>
 
@@ -392,7 +400,7 @@ async function scanGithub(input) {
     prog('Analyzing…', 100);
     const r = scan(files);
     r.target = `github.com/${meta.name} @ ${meta.ref}`;
-    r.note = `${meta.scannedFiles} of ${meta.totalFiles} files read (only the ones that can run code or reach an agent). Repos fetched from GitHub never include .git/config — drop a downloaded folder to check that too.`;
+    r.note = `${meta.scannedFiles} of ${meta.totalFiles} files read (only the ones that can run code or reach an agent). Repos fetched from GitHub never include .git/config. drop a downloaded folder to check that too.`;
     render(r, { kind: 'gh', name: meta.name });
     lastHash = `gh=${meta.name}`; history.replaceState(null, '', `#gh=${meta.name}`);
   } catch (e) { showErr(e.message); }
@@ -458,7 +466,7 @@ function finishLocal(out, label) {
 }
 
 // ── demo ──
-$('#demoBtn').onclick = () => { const r = scan(DEMO_FILES); r.target = `${DEMO_NAME}  ·  defanged demo — every URL points at example.invalid`; render(r, { kind: 'demo' }); lastHash = 'demo'; history.replaceState(null, '', '#demo'); };
+$('#demoBtn').onclick = () => { const r = scan(DEMO_FILES); r.target = `${DEMO_NAME}  ·  defanged demo. every URL points at example.invalid`; render(r, { kind: 'demo' }); lastHash = 'demo'; history.replaceState(null, '', '#demo'); };
 
 // ── quick paste box → Invisible Ink ──
 $('#inkQuick').oninput = (e) => { $('#ink-in').value = e.target.value; ink(); };
@@ -502,7 +510,7 @@ function drawFindings() {
   const { r } = current;
   $('#timeline').querySelectorAll('.tnode').forEach(n => { n.classList.toggle('on', n.dataset.phase === filter.phase); n.classList.toggle('dim', !!filter.phase && n.dataset.phase !== filter.phase); });
   const list = r.findings.filter(f => (!filter.sev || f.severity === filter.sev) && (!filter.phase || f.phase === filter.phase));
-  if (!r.findings.length) { $('#findings').innerHTML = `<div class="empty">✓ Nothing here runs code or steers an agent on its own.<br><span style="color:var(--muted);font-size:13px">${esc(r.note || '')}</span></div>`; return; }
+  if (!r.findings.length) { $('#findings').innerHTML = `<div class="empty">Clean. Nothing here runs code or steers an agent on its own.<br><span style="color:var(--muted);font-size:13px">${esc(r.note || '')}</span></div>`; return; }
   $('#findings').innerHTML = list.map((f, i) => {
     const ph = PHASES.find(p => p.id === f.phase);
     const tags = (f.tags || []).filter(t => t !== 'network' || f.tags.length === 1);
@@ -535,7 +543,7 @@ $('#badgeBtn').onclick = () => copy(`[![AgentXray ${current.r.grade}](${badge(cu
 $('#mdBtn').onclick = () => copy(toMarkdown(current.r), 'Markdown report copied');
 $('#sarifBtn').onclick = () => { const b = new Blob([JSON.stringify(toSarif(current.r), null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'agentxray.sarif'; a.click(); };
 function toMarkdown(r) {
-  let s = `## AgentXray report — grade **${r.grade}** (${r.score}/100)\n\n**${r.target}**\n\n> ${r.verdict}\n\n| Severity | Stage | Finding | File |\n|---|---|---|---|\n`;
+  let s = `## AgentXray report. grade **${r.grade}** (${r.score}/100)\n\n**${r.target}**\n\n> ${r.verdict}\n\n| Severity | Stage | Finding | File |\n|---|---|---|---|\n`;
   for (const f of r.findings) s += `| ${f.severity} | ${PHASES.find(p => p.id === f.phase).short} | ${f.title.replace(/\|/g, '\\|')} | \`${f.file}${f.line > 1 ? ':' + f.line : ''}\` |\n`;
   return s + `\n_Scanned with [AgentXray](${SITE}) v${VERSION}_\n`;
 }
@@ -555,7 +563,7 @@ function ink() {
   const total = cnt.tag + cnt.vs + cnt.zw + cnt.bidi;
   const r = scan([{ path: 'AGENTS.md', text }]);
   const inj = r.findings.filter(f => /INJ/.test(f.rule));
-  $('#ink-stats').innerHTML = `<span>${[...text].length} chars</span><span style="color:${total ? 'var(--mag)' : 'var(--glow)'}">${total} invisible</span>` + (cnt.tag ? `<span class="c-hidden">${cnt.tag} tag</span>` : '') + (cnt.vs ? `<span class="c-hidden">${cnt.vs} variation-selector</span>` : '') + (cnt.zw ? `<span style="color:var(--high)">${cnt.zw} zero-width</span>` : '') + (cnt.bidi ? `<span style="color:var(--crit)">${cnt.bidi} bidi</span>` : '') + (inj.length ? `<span style="color:var(--crit)">⚠ ${inj.length} injection pattern${inj.length > 1 ? 's' : ''}</span>` : '');
+  $('#ink-stats').innerHTML = `<span>${[...text].length} chars</span><span style="color:${total ? 'var(--mag)' : 'var(--glow)'}">${total} invisible</span>` + (cnt.tag ? `<span class="c-hidden">${cnt.tag} tag</span>` : '') + (cnt.vs ? `<span class="c-hidden">${cnt.vs} variation-selector</span>` : '') + (cnt.zw ? `<span style="color:var(--high)">${cnt.zw} zero-width</span>` : '') + (cnt.bidi ? `<span style="color:var(--crit)">${cnt.bidi} bidi</span>` : '') + (inj.length ? `<span style="color:var(--crit)">${inj.length} injection pattern${inj.length > 1 ? 's' : ''}</span>` : '');
   const msgs = revealHidden(text).filter(h => h.decoded);
   $('#ink-msgs').innerHTML = msgs.map(h => `<div class="hcard"><div class="k"><span>${esc(kindName(h.kind))}</span><span>${h.length} hidden chars</span></div><div class="msg">${esc(h.decoded)}</div></div>`).join('')
     + inj.map(f => `<div class="hcard" style="border-color:#5a1a28"><div class="k" style="color:#ff8aa0"><span>prompt injection</span><span>${f.severity.toUpperCase()}</span></div><div class="msg" style="color:#ffd0d8">${esc(f.decoded || f.evidence)}</div></div>`).join('');

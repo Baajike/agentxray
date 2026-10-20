@@ -21,7 +21,7 @@ export function toSarif(result) {
       tool: { driver: { name: 'AgentXray', version: VERSION, informationUri: 'https://github.com/Baajike/agentxray', rules: [...rules.values()] } },
       results: result.findings.map(f => ({
         ruleId: f.rule, level: LEVEL[f.severity],
-        message: { text: `${f.title}${f.decoded ? ` — decoded: ${f.decoded.slice(0, 200)}` : ''}` },
+        message: { text: `${f.title}${f.decoded ? `, decoded: ${f.decoded.slice(0, 200)}` : ''}` },
         locations: [{ physicalLocation: { artifactLocation: { uri: f.file }, region: { startLine: Math.max(1, f.line || 1) } } }],
         properties: { severity: f.severity, phase: f.phase, tags: f.tags || [] },
       })),

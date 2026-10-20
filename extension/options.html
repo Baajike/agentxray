@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AgentXray options</title>
+<style>
+  body{margin:0;background:#07090c;color:#d8e1ea;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;min-width:340px}
+  main{padding:20px;max-width:520px}
+  h1{font-size:16px;margin:0 0 4px;color:#39ff9c}
+  p{color:#8b98a6;margin:6px 0 14px;font-size:12.5px}
+  label{display:block;font-size:12px;color:#8b98a6;margin-bottom:6px}
+  input{width:100%;box-sizing:border-box;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px;color:#d8e1ea;font:inherit}
+  .row{display:flex;gap:8px;margin-top:10px}
+  button{background:#39ff9c;color:#03130b;border:0;border-radius:8px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+  button.ghost{background:transparent;color:#d8e1ea;border:1px solid #30363d;font-weight:400}
+  #msg{font-size:12px;color:#39ff9c;margin-top:10px;min-height:16px}
+  a{color:#5ad8ff}
+</style>
+</head>
+<body>
+<main>
+  <h1>AgentXray for GitHub</h1>
+  <p>A grade appears beside the name of every GitHub repo you open. Hover it for the top findings, click it for the full report.</p>
+  <label for="token">GitHub token (optional)</label>
+  <input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
+  <p>Without a token GitHub allows about 30 repo scans per hour. A fine-grained token with <b>no permissions at all</b> (public repos only) raises that to about 2,500. It is stored only in this browser and sent only to api.github.com.</p>
+  <div class="row"><button id="save">Save</button><button class="ghost" id="clear">Clear cached grades</button></div>
+  <div id="msg"></div>
+  <p style="margin-top:18px"><a href="https://baajike.github.io/agentxray/" target="_blank" rel="noopener">Open the AgentXray website</a> · <a href="https://github.com/Baajike/agentxray" target="_blank" rel="noopener">Source</a></p>
+</main>
+<script src="options.js"></script>
+</body>
+</html>

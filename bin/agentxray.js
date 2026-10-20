@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// AgentXray CLI — see what a repo can make your AI coding agent do, before you open it.
+// AgentXray CLI, see what a repo can make your AI coding agent do, before you open it.
 import { readdirSync, lstatSync, readFileSync, readlinkSync, existsSync, writeFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { scan, isInteresting, badge, VERSION, PHASES, SEVERITIES } from '../src/engine.js';
@@ -14,7 +14,7 @@ const positional = argv.filter((a, i) => !a.startsWith('--') && !['--fail-on', '
 
 if (flag('--help') || flag('-h')) {
   console.log(`
-  agentxray ${VERSION} — X-ray a repo before your AI coding agent touches it
+  agentxray ${VERSION}. X-ray a repo before your AI coding agent touches it
 
   Usage
     agentxray [path | owner/repo | github-url]     scan a folder (default: .) or a GitHub repo without cloning
@@ -31,7 +31,7 @@ if (flag('--help') || flag('-h')) {
   CI
     --fail-on <severity>   exit 1 if any finding is at/above: critical | high | medium | low
     --ignore-file <path>   your own ignore list (globs or rule ids, one per line).
-                           A scanned repo's own .agentxrayignore is NEVER trusted — a repo can't silence itself.
+                           A scanned repo's own .agentxrayignore is NEVER trusted, a repo can't silence itself.
 
   Env
     GITHUB_TOKEN           raises the GitHub API limit for remote scans
@@ -150,7 +150,7 @@ function printPretty(r) {
   console.log('  ' + cells.join(C.dim(' ─ ')));
   console.log(line);
 
-  if (!r.findings.length) { console.log(C.green('  ✓ Nothing found that runs code or steers an agent on its own.')); console.log(); return; }
+  if (!r.findings.length) { console.log(C.green('  Clean. Nothing found that runs code or steers an agent on its own.')); console.log(); return; }
 
   const verbose = flag('--verbose');
   for (const ph of PHASES) {
