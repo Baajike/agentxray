@@ -1,0 +1,15 @@
+{
+  "name": "agentxray",
+  "version": "0.1.0",
+  "description": "X-ray any repo before your AI coding agent touches it. Finds hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections — and shows when each one fires.",
+  "type": "module",
+  "bin": { "agentxray": "bin/agentxray.js" },
+  "files": ["bin", "src"],
+  "scripts": {
+    "test": "node --test test/engine.test.js",
+    "demo": "node bin/agentxray.js --demo"
+  },
+  "engines": { "node": ">=18" },
+  "keywords": ["security", "ai-agents", "claude-code", "cursor", "copilot", "mcp", "prompt-injection", "supply-chain", "devsecops", "sarif"],
+  "license": "MIT"
+}

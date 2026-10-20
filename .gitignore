@@ -1,0 +1,4 @@
+node_modules/
+agentxray.sarif
+agentxray.json
+.DS_Store

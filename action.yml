@@ -1,0 +1,44 @@
+name: AgentXray
+description: X-ray a repo for AI-agent attack surfaces — hooks, MCP servers, auto-run tasks, git-config traps and invisible prompt injections.
+branding: { icon: eye, color: green }
+inputs:
+  path:        { description: Folder to scan, default: '.' }
+  fail-on:     { description: 'Fail if a finding is at or above this severity (critical|high|medium|low). Empty = never fail.', default: 'critical' }
+  sarif:       { description: Upload SARIF to GitHub code scanning (needs security-events write), default: 'true' }
+  ignore-file: { description: Path to YOUR ignore list (rule ids or globs). The scanned code cannot supply its own., default: '' }
+outputs:
+  grade: { description: 'A–F grade', value: '${{ steps.scan.outputs.grade }}' }
+  score: { description: '0–100 score', value: '${{ steps.scan.outputs.score }}' }
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with: { node-version: '20' }
+    - id: scan
+      shell: bash
+      env:
+        AX: ${{ github.action_path }}/bin/agentxray.js
+        TARGET: ${{ inputs.path }}
+        IGNORE: ${{ inputs.ignore-file }}
+      run: |
+        IGN=""; [ -n "$IGNORE" ] && IGN="--ignore-file $IGNORE"
+        node "$AX" "$TARGET" $IGN || true
+        node "$AX" "$TARGET" $IGN --sarif --out agentxray.sarif
+        node "$AX" "$TARGET" $IGN --json --out agentxray.json
+        echo "grade=$(node -e 'console.log(require("./agentxray.json").grade)')" >> "$GITHUB_OUTPUT"
+        echo "score=$(node -e 'console.log(require("./agentxray.json").score)')" >> "$GITHUB_OUTPUT"
+        node -e 'const r=require("./agentxray.json");let s=`## AgentXray: grade **${r.grade}** (${r.score}/100)\n\n> ${r.verdict}\n\n`;for(const f of r.findings)s+=`- **${f.severity}** ${f.title} — \`${f.file}:${f.line}\`\n`;require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY,s)'
+    - if: inputs.sarif == 'true'
+      uses: github/codeql-action/upload-sarif@v3
+      continue-on-error: true
+      with: { sarif_file: agentxray.sarif, category: agentxray }
+    - if: inputs.fail-on != ''
+      shell: bash
+      env:
+        AX: ${{ github.action_path }}/bin/agentxray.js
+        TARGET: ${{ inputs.path }}
+        FAIL: ${{ inputs.fail-on }}
+        IGNORE: ${{ inputs.ignore-file }}
+      run: |
+        IGN=""; [ -n "$IGNORE" ] && IGN="--ignore-file $IGNORE"
+        node "$AX" "$TARGET" $IGN --json --fail-on "$FAIL" > /dev/null

@@ -1,0 +1,4 @@
+# The engine and demo intentionally contain attack strings as detection rules and test fixtures.
+src/**
+test/**
+README.md
