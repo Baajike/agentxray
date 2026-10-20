@@ -4,7 +4,7 @@
 
 ### See what a repo will make your AI agent do — *before* you open it.
 
-**[Try it in your browser →](https://OWNER.github.io/agentxray/)** · [Run the attack demo](https://OWNER.github.io/agentxray/#demo) · [CLI](#cli) · [GitHub Action](#github-action)
+**[Try it in your browser →](https://Baajike.github.io/agentxray/)** · [Run the attack demo](https://Baajike.github.io/agentxray/#demo) · [CLI](#cli) · [GitHub Action](#github-action)
 
 Hooks, MCP servers, auto-run tasks, git-config traps and **invisible** prompt injections —
 decoded, graded A–F, and placed on the exact moment they fire.
@@ -58,9 +58,9 @@ Every command found is analysed for **download-and-execute, reverse shells, enco
 Zero dependencies, Node 18+.
 
 ```bash
-npx github:OWNER/agentxray .                 # scan the current folder (includes .git/config & hooks)
-npx github:OWNER/agentxray owner/repo        # scan a GitHub repo WITHOUT cloning it
-npx github:OWNER/agentxray --demo            # see a full attack, defanged
+npx github:Baajike/agentxray .                 # scan the current folder (includes .git/config & hooks)
+npx github:Baajike/agentxray owner/repo        # scan a GitHub repo WITHOUT cloning it
+npx github:Baajike/agentxray --demo            # see a full attack, defanged
 ```
 
 ```
@@ -95,7 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: OWNER/agentxray@main
+      - uses: Baajike/agentxray@main
         with:
           fail-on: high
 ```
@@ -105,9 +105,9 @@ Findings appear in **Security → Code scanning** and in the job summary. Catche
 ## README badge
 
 ```bash
-npx github:OWNER/agentxray . --badge
+npx github:Baajike/agentxray . --badge
 ```
-[![AgentXray A](https://img.shields.io/badge/AgentXray-A%20%C2%B7%20100%2F100-brightgreen)](https://OWNER.github.io/agentxray/)
+[![AgentXray A](https://img.shields.io/badge/AgentXray-A%20%C2%B7%20100%2F100-brightgreen)](https://Baajike.github.io/agentxray/)
 
 ## Grades
 
@@ -141,6 +141,6 @@ npm test
 
 <div align="center">
 
-Built by **[Immanuella Baajike](https://github.com/OWNER)** · MIT licensed · ⭐ star it if it saved you from a bad repo
+Built by **[Immanuella Baajike](https://github.com/Baajike)** · MIT licensed · ⭐ star it if it saved you from a bad repo
 
 </div>

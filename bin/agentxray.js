@@ -117,7 +117,7 @@ const emit = (s) => (out ? writeFileSync(out, s) : process.stdout.write(s + '\n'
 
 if (flag('--sarif')) emit(JSON.stringify(toSarif(result), null, 2));
 else if (flag('--json')) emit(JSON.stringify(result, null, 2));
-else if (flag('--badge')) emit(`[![AgentXray ${result.grade}](${badge(result)})](https://github.com/topics/agentxray)`);
+else if (flag('--badge')) emit(`[![AgentXray ${result.grade}](${badge(result)})](https://github.com/Baajike/agentxray)`);
 else printPretty(result);
 
 const failOn = opt('--fail-on');

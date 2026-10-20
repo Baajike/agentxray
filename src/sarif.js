@@ -18,7 +18,7 @@ export function toSarif(result) {
   return {
     $schema: 'https://json.schemastore.org/sarif-2.1.0.json', version: '2.1.0',
     runs: [{
-      tool: { driver: { name: 'AgentXray', version: VERSION, informationUri: 'https://github.com/topics/agentxray', rules: [...rules.values()] } },
+      tool: { driver: { name: 'AgentXray', version: VERSION, informationUri: 'https://github.com/Baajike/agentxray', rules: [...rules.values()] } },
       results: result.findings.map(f => ({
         ruleId: f.rule, level: LEVEL[f.severity],
         message: { text: `${f.title}${f.decoded ? ` — decoded: ${f.decoded.slice(0, 200)}` : ''}` },

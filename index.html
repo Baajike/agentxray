@@ -199,7 +199,7 @@ footer a{color:var(--muted)}
       <a href="#ink">Invisible Ink</a>
       <a href="#everywhere">CLI &amp; CI</a>
       <a href="#compare">Why AgentXray</a>
-      <a class="gh" id="ghLink" href="https://github.com/topics/agentxray" target="_blank" rel="noopener">★ GitHub</a>
+      <a class="gh" id="ghLink" href="https://github.com/Baajike/agentxray" target="_blank" rel="noopener">★ GitHub</a>
     </div>
   </nav>
 </header>
@@ -337,7 +337,7 @@ footer a{color:var(--muted)}
 </main>
 
 <footer class="wrap">
-  AgentXray is open source (MIT). Built by <a href="https://github.com/topics/agentxray" id="authorLink">Immanuella Baajike</a>.<br>
+  AgentXray is open source (MIT). Built by <a href="https://github.com/Baajike" id="authorLink">Immanuella Baajike</a>.<br>
   It's a triage tool, not a guarantee — when in doubt, open untrusted code in a throwaway container.
 </footer>
 <div class="toast" id="toast"></div>
@@ -350,7 +350,7 @@ import { DEMO_FILES, DEMO_NAME } from './src/demo.js';
 
 // ── repo slug for docs/links (works on any GitHub Pages fork) ──
 const host = location.hostname.match(/^([\w-]+)\.github\.io$/);
-const SLUG = host ? `${host[1]}/${location.pathname.split('/').filter(Boolean)[0] || 'agentxray'}` : 'OWNER/agentxray';
+const SLUG = host ? `${host[1]}/${location.pathname.split('/').filter(Boolean)[0] || 'agentxray'}` : 'Baajike/agentxray';
 document.querySelectorAll('.repoSlug').forEach(e => e.textContent = SLUG);
 if (host) { document.getElementById('ghLink').href = `https://github.com/${SLUG}`; document.getElementById('authorLink').href = `https://github.com/${host[1]}`; }
 const SITE = location.origin + location.pathname;
